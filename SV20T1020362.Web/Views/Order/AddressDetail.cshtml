@@ -1,0 +1,77 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <form id="formAddress" action="~/Order/AddressDetail/@ViewBag.OrderID" method="post">
+            <div class="modal-header bg-primary">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Thay đổi địa chỉ đơn hàng</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="control-label col-sm-12">Địa chỉ giao hàng:</label>
+                    <div class="col-sm-12">
+                        <input type="text" class="form-control" name="deliveryAddress" value="">
+                        @Html.ValidationMessage("deliveryAddress", new { @style = "color: #f00" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-12">Tỉnh/thành:</label>
+                    <div class="col-sm-12">
+                        <select class="form-control" name="deliveryProvince">
+                            <option value="">-- Chọn tỉnh/thành --</option>
+                            @foreach (var item in SV20T1020362.BusinessLayers.CommonDataService.ListOfProvinces())
+                            {
+
+
+                                <option value="@item.ProvinceName">@item.ProvinceName</option>
+                            }
+                        </select>
+                        @Html.ValidationMessage("deliveryProvince", new { @style = "color: #f00" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <span id="message" class="col-sm-12" style="color:#f00"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa fa-floppy-o"></i> Cập nhật
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    Bỏ qua
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#formAddress').submit(function (e) {
+            e.preventDefault();
+            var url = $(this).prop("action");
+            var method = $(this).prop("method");
+            var postData = $(this).serializeArray();
+
+            $.ajax({
+                url: url,
+                type: method,
+                data: postData,
+                error: function () {
+                    alert("Your request is not valid!");
+                },
+                success: function (data) {
+                    if (data !== "") {
+                        $("#message").html(data);
+                    }
+                    else {
+                        location.reload();
+                    }
+                }
+            });
+            return;
+        });
+    });
+</script>
